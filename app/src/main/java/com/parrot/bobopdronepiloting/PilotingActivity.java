@@ -1,19 +1,17 @@
-package com.parrot.rollingspiderpiloting;
+package com.parrot.bobopdronepiloting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.parrot.bebopdronepiloting.R;
 
+import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
-
-import java.sql.Date;
 
 public class PilotingActivity extends Activity implements DeviceControllerListener
 {
@@ -363,15 +361,14 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
 
         if (deviceController != null)
         {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PilotingActivity.this);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PilotingActivity.this);
 
             // set title
             alertDialogBuilder.setTitle("Connecting ...");
 
+
             // create alert dialog
             alertDialog = alertDialogBuilder.create();
-
-            // show it
             alertDialog.show();
 
             new Thread(new Runnable() {
@@ -395,13 +392,6 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                     {
                         finish();
                     }
-                    else
-                    {
-                        //only with RollingSpider in version 1.97 : date and time must be sent to permit a reconnection
-                        Date currentDate = new Date(System.currentTimeMillis());
-                        deviceController.sendDate(currentDate);
-                        deviceController.sendTime(currentDate);
-                    }
                 }
             }).start();
 
@@ -412,42 +402,55 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     {
         if (deviceController != null)
         {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PilotingActivity.this);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PilotingActivity.this);
 
             // set title
             alertDialogBuilder.setTitle("Disconnecting ...");
 
-            // create alert dialog
-            alertDialog = alertDialogBuilder.create();
-
             // show it
-            alertDialog.show();
-
-            new Thread(new Runnable() {
+            runOnUiThread(new Runnable()
+            {
                 @Override
                 public void run()
                 {
-                    deviceController.stop();
+                    // create alert dialog
+                    alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
 
-                    runOnUiThread(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run()
                         {
-                            //alertDialog.hide();
-                            alertDialog.dismiss();
-                            finish();
-                        }
-                    });
+                            deviceController.stop();
+                            deviceController = null;
 
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run()
+                                {
+                                    //alertDialog.hide();
+                                    alertDialog.dismiss();
+                                    finish();
+                                }
+                            });
+
+                        }
+                    }).start();
                 }
-            }).start();
+            });
+            //alertDialog.show();
+
         }
     }
 
     @Override
     protected void onStop()
     {
-        stopDeviceController();
+        if (deviceController != null)
+        {
+            deviceController.stop();
+            deviceController = null;
+        }
 
         super.onStop();
     }
@@ -475,5 +478,34 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
             }
         });
 
+    }
+
+    @Override
+    public void onFlyingStateChanged(final ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM state)
+    {
+        // on the UI thread, disable and enable buttons according to flying state
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                switch (state) {
+                    case ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_LANDED:
+                        takeoffBt.setEnabled(true);
+                        landingBt.setEnabled(false);
+                        break;
+                    case ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_FLYING:
+                    case ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_HOVERING:
+                        takeoffBt.setEnabled(false);
+                        landingBt.setEnabled(true);
+                        break;
+                    default:
+                        // in all other cases, take of and landing are not enabled
+                        takeoffBt.setEnabled(false);
+                        landingBt.setEnabled(false);
+                        break;
+                }
+            }
+        });
     }
 }

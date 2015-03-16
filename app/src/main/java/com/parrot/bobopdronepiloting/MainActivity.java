@@ -1,4 +1,4 @@
-package com.parrot.rollingspiderpiloting;
+package com.parrot.bobopdronepiloting;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -6,24 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceBLEService;
+import com.parrot.arsdk.ardiscovery.ARDISCOVERY_PRODUCT_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryService;
 import com.parrot.arsdk.ardiscovery.receivers.ARDiscoveryServicesDevicesListUpdatedReceiver;
 import com.parrot.arsdk.ardiscovery.receivers.ARDiscoveryServicesDevicesListUpdatedReceiverDelegate;
 import com.parrot.arsdk.arsal.ARSALPrint;
+import com.parrot.bebopdronepiloting.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,12 +95,6 @@ public class MainActivity extends ActionBarActivity implements ARDiscoveryServic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                String  itemValue = (String) listView.getItemAtPosition(position);
 
                 ARDiscoveryDeviceService service = deviceList.get(position);
 
@@ -228,31 +221,6 @@ public class MainActivity extends ActionBarActivity implements ARDiscoveryServic
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onServicesDevicesListUpdated()
     {
         Log.d(TAG, "onServicesDevicesListUpdated ...");
@@ -270,8 +238,11 @@ public class MainActivity extends ActionBarActivity implements ARDiscoveryServic
             {
                 for (ARDiscoveryDeviceService service : list)
                 {
-                    Log.d(TAG, "service :  "+ service);
-                    if (service.getDevice() instanceof ARDiscoveryDeviceBLEService)
+                    Log.e(TAG, "service :  "+ service + " name = " + service.getName());
+                    ARDISCOVERY_PRODUCT_ENUM product = ARDiscoveryService.getProductFromProductID(service.getProductID());
+                    Log.e(TAG, "product :  "+ product);
+                    // only display Bebop drones
+                    if (ARDISCOVERY_PRODUCT_ENUM.ARDISCOVERY_PRODUCT_ARDRONE.equals(product))
                     {
                         deviceList.add(service);
                         deviceNames.add(service.getName());
