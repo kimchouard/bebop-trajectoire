@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.parrot.bebopdronepiloting.R;
 
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
+import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
 
 public class PilotingActivity extends Activity implements DeviceControllerListener
@@ -36,6 +37,13 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     private Button rollRightBt;
 
     private TextView batteryLabel;
+    private TextView altitudeLabel;
+    private TextView rollLabel;
+    private TextView yawLabel;
+    private TextView pitchLabel;
+    private TextView longitudeLabel;
+    private TextView latitudeLabel;
+    private TextView GPSLabel;
 
     private AlertDialog alertDialog;
 
@@ -346,6 +354,13 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         });
 
         batteryLabel = (TextView) findViewById(R.id.batteryLabel);
+        altitudeLabel = (TextView) findViewById(R.id.altitudeValue);
+        rollLabel = (TextView) findViewById(R.id.rollValue);
+        pitchLabel = (TextView) findViewById(R.id.pitchValue);
+        yawLabel = (TextView) findViewById(R.id.yawValue);
+        longitudeLabel = (TextView) findViewById(R.id.longitudeValue);
+        latitudeLabel = (TextView) findViewById(R.id.latitudeValue);
+        GPSLabel = (TextView) findViewById(R.id.GPLValue);
 
         Intent intent = getIntent();
         service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
@@ -505,6 +520,57 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                         landingBt.setEnabled(false);
                         break;
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onAltitudeChanged(final double altitude)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                altitudeLabel.setText(String.format("%f", altitude));
+            }
+        });
+    }
+
+    @Override
+    public void onAttitudeChanged(final float roll, final float pitch, final float yaw)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                rollLabel.setText(String.format("%f", roll));
+                pitchLabel.setText(String.format("%f", pitch));
+                yawLabel.setText(String.format("%f", yaw));
+            }
+        });
+    }
+
+    @Override
+    public void onPositionChanged(final double latitude, final double longitude)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                latitudeLabel.setText(String.format("%f", latitude));
+                longitudeLabel.setText(String.format("%f", longitude));
+            }
+        });
+    }
+
+    @Override
+    public void onGPSStatusChanged(final ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM state)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                longitudeLabel.setText(String.format("%s", state));
             }
         });
     }
