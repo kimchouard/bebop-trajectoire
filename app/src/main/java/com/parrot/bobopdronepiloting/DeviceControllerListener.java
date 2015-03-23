@@ -10,6 +10,6 @@ public interface DeviceControllerListener
     public void onFlyingStateChanged(ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM state);
     public void onAltitudeChanged(double altitude);
     public void onAttitudeChanged(float roll, float pitch, float yaw);
-    public void onPositionChanged(double latitude, double longitude);
+    public void onPositionChanged(double latitude, double longitude, final double altitude);
     public void onGPSStatusChanged(ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM state);
 }

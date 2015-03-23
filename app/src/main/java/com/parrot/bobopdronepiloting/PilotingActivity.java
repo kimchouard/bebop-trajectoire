@@ -2,17 +2,27 @@ package com.parrot.bobopdronepiloting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.parrot.bebopdronepiloting.R;
 
+import android.os.Environment;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class PilotingActivity extends Activity implements DeviceControllerListener
 {
@@ -46,6 +56,11 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     private TextView GPSLabel;
 
     private AlertDialog alertDialog;
+
+    File fGPSLog;
+    FileOutputStream fsGPSLog;
+    OutputStreamWriter fswGPSLog;
+    private static String GPSLogFilename = "gps.log.csv";
 
 
 
@@ -367,6 +382,45 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
 
         deviceController = new DeviceController(this, service);
         deviceController.setListener(this);
+
+        initLogs();
+    }
+
+    private void initLogs()
+    {
+        // write on SD card file data in the text box
+        try {
+            fGPSLog = new File(Environment.getExternalStorageDirectory() + File.separator + "GPSLog.txt");
+            fGPSLog.createNewFile();
+            FileOutputStream fsGPSLog = new FileOutputStream(fGPSLog);
+            fswGPSLog =
+                    new OutputStreamWriter(fsGPSLog);
+            String header = "Time,Lattitude,Longitude,Altitude";
+            writeGPSLog(header);
+            Log.d("FILE", "Logs initiated");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeGPSLog(String mess)
+    {
+        try {
+            fswGPSLog.append(mess);
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void closeLogs()
+    {
+        // write on SD card file data in the text box
+        try {
+            fswGPSLog.close();
+            fsGPSLog.close();
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
     }
 
     @Override
@@ -463,6 +517,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     {
         if (deviceController != null)
         {
+            closeLogs();
             deviceController.stop();
             deviceController = null;
         }
@@ -551,7 +606,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     }
 
     @Override
-    public void onPositionChanged(final double latitude, final double longitude)
+    public void onPositionChanged(final double latitude, final double longitude, final double altitude)
     {
         runOnUiThread(new Runnable() {
             @Override
@@ -559,6 +614,8 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
             {
                 latitudeLabel.setText(String.format("%f", latitude));
                 longitudeLabel.setText(String.format("%f", longitude));
+//                altitudeLabel.setText(String.format("%f", altitude));
+//                writeGPSLog(latitude+","+longitude+","+altitude);
             }
         });
     }
