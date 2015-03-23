@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,7 +61,16 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     File fGPSLog;
     FileOutputStream fsGPSLog;
     OutputStreamWriter fswGPSLog;
-    private static String GPSLogFilename = "gps.log.csv";
+    private static String GPSLogFilename = "gps.log.";
+    File fSensorsLog;
+    FileOutputStream fsSensorsLog;
+    OutputStreamWriter fswSensorsLog;
+    private static String SensorsLogFilename = "sensors.log.";
+    File fHeightLog;
+    FileOutputStream fsHeightLog;
+    OutputStreamWriter fswHeightLog;
+    private static String HeightLogFilename = "height.log.";
+    Time time;
 
 
 
@@ -390,13 +400,34 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     {
         // write on SD card file data in the text box
         try {
-            fGPSLog = new File(Environment.getExternalStorageDirectory() + File.separator + "GPSLog.txt");
+            time = new Time();
+            time.setToNow();
+            Long millis = time.toMillis(false);
+
+            // Init gps logs
+            fGPSLog = new File(Environment.getExternalStorageDirectory() + File.separator + GPSLogFilename + millis.toString() + ".csv");
             fGPSLog.createNewFile();
-            FileOutputStream fsGPSLog = new FileOutputStream(fGPSLog);
-            fswGPSLog =
-                    new OutputStreamWriter(fsGPSLog);
-            String header = "Time,Lattitude,Longitude,Altitude";
-            writeGPSLog(header);
+            fsGPSLog = new FileOutputStream(fGPSLog);
+            fswGPSLog = new OutputStreamWriter(fsGPSLog);
+            String GPSheader = "Time,Lattitude,Longitude,Altitude";
+            writeGPSLog(GPSheader);
+
+            // Init sensor logs
+            fSensorsLog = new File(Environment.getExternalStorageDirectory() + File.separator + SensorsLogFilename + millis.toString() + ".csv");
+            fSensorsLog.createNewFile();
+            fsSensorsLog = new FileOutputStream(fSensorsLog);
+            fswSensorsLog= new OutputStreamWriter(fsSensorsLog);
+            String SensorHeader = "Time,Roll,Pitch,Yaw";
+            writeSensorLog(SensorHeader);
+
+            // Init height logs
+            fHeightLog = new File(Environment.getExternalStorageDirectory() + File.separator + HeightLogFilename + millis.toString() + ".csv");
+            fHeightLog.createNewFile();
+            fsHeightLog = new FileOutputStream(fHeightLog);
+            fswHeightLog= new OutputStreamWriter(fsHeightLog);
+            String HeightHeader = "Time,Altitude";
+            writeHeightLog(HeightHeader);
+
             Log.d("FILE", "Logs initiated");
         } catch (Exception e) {
             Log.e("FILE", e.getMessage());
@@ -406,7 +437,25 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     private void writeGPSLog(String mess)
     {
         try {
-            fswGPSLog.append(mess);
+            fswGPSLog.append(mess+"\n");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeHeightLog(String mess)
+    {
+        try {
+            fswHeightLog.append(mess+"\n");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeSensorLog(String mess)
+    {
+        try {
+            fswSensorsLog.append(mess+"\n");
         } catch (Exception e) {
             Log.e("FILE", e.getMessage());
         }
@@ -418,6 +467,8 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         try {
             fswGPSLog.close();
             fsGPSLog.close();
+            fswSensorsLog.close();
+            fsSensorsLog.close();
         } catch (Exception e) {
             Log.e("FILE", e.getMessage());
         }
@@ -587,6 +638,9 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
             public void run()
             {
                 altitudeLabel.setText(String.format("%f", altitude));
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeHeightLog(millis.toString()+","+altitude);
             }
         });
     }
@@ -601,6 +655,9 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                 rollLabel.setText(String.format("%f", roll));
                 pitchLabel.setText(String.format("%f", pitch));
                 yawLabel.setText(String.format("%f", yaw));
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeSensorLog(millis.toString()+","+roll+","+pitch+","+yaw);
             }
         });
     }
@@ -615,7 +672,9 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                 latitudeLabel.setText(String.format("%f", latitude));
                 longitudeLabel.setText(String.format("%f", longitude));
 //                altitudeLabel.setText(String.format("%f", altitude));
-//                writeGPSLog(latitude+","+longitude+","+altitude);
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeGPSLog(millis.toString()+","+latitude+","+longitude+","+altitude);
             }
         });
     }
