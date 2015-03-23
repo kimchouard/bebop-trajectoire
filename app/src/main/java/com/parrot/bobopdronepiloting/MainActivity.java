@@ -98,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements ARDiscoveryServic
 
                 ARDiscoveryDeviceService service = deviceList.get(position);
 
-                Intent intent = new Intent(MainActivity.this, PilotingActivity.class);
+                Intent intent = new Intent(MainActivity.this, PlanificationActivity.class);
                 intent.putExtra(PilotingActivity.EXTRA_DEVICE_SERVICE, service);
 
 

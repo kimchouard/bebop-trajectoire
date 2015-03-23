@@ -13,6 +13,8 @@ import com.parrot.bebopdronepiloting.R;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
 
+import java.util.ArrayList;
+
 public class PilotingActivity extends Activity implements DeviceControllerListener
 {
     private static String TAG = PilotingActivity.class.getSimpleName();
@@ -20,13 +22,13 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
 
     public DeviceController deviceController;
     public ARDiscoveryDeviceService service;
+    public ArrayList<String> cmd;
 
     private Button emergencyBt;
     private Button takeoffBt;
     private Button landingBt;
     private Button flipBt;
     private Button pathBt;
-    private Button path2Bt;
 
     private Button gazUpBt;
     private Button gazDownBt;
@@ -50,6 +52,10 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_piloting);
 
+        Intent intent = getIntent();
+        service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
+        cmd = intent.getStringArrayListExtra(PlanificationActivity.COMMAND_LIST);
+
         emergencyBt = (Button) findViewById(R.id.emergencyBt);
         emergencyBt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
@@ -67,125 +73,29 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
             {
                 if (deviceController != null)
                 {
-                    // 3 straight lines.
                     deviceController.sendTakeoff();
                     deviceController.waitTime(5000);
-
-                    deviceController.setPitch((byte) 10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) -10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setYaw((byte) 52);
-                    deviceController.waitTime(1600);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setPitch((byte) 10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) -10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setYaw((byte) 52);
-                    deviceController.waitTime(1600);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setPitch((byte) 10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) -10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setYaw((byte) 52);
-                    deviceController.waitTime(1600);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setPitch((byte) 10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) -10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.setYaw((byte) -90);
-                    deviceController.waitTime(2000);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
+                    for (int i=0; i<cmd.size(); i++)
+                    {
+                        switch (cmd.get(i))
+                        {
+                            case "Avancer" :
+                                deviceController.moveFront();
+                                break;
+                            case "Reculer" :
+                                deviceController.moveFront();
+                                break;
+                            case "Tourner à gauche" :
+                                deviceController.moveFront();
+                                break;
+                            case "Tourner à droite" :
+                                deviceController.moveFront();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     deviceController.sendLanding();
-                }
-            }
-        });
-
-        path2Bt = (Button) findViewById(R.id.path2Bt);
-        path2Bt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v)
-            {
-                if (deviceController != null)
-                {
-                    deviceController.sendTakeoff();
-                    deviceController.waitTime(5000);
-
-                    //rotation 180
-                    deviceController.setYaw((byte) 90);
-                    deviceController.waitTime(2000);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    //rotation -180
-                    deviceController.setYaw((byte) -90);
-                    deviceController.waitTime(2000);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    //rotation 90
-                    deviceController.setYaw((byte) 52);
-                    deviceController.waitTime(1600);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    //rotation -90
-                    deviceController.setYaw((byte) -52);
-                    deviceController.waitTime(1600);
-                    deviceController.setYaw((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    // avance 4
-                    deviceController.setPitch((byte) 10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) -10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    //recule 4
-                    deviceController.setPitch((byte) -10);
-                    deviceController.setFlag((byte) 1);
-                    deviceController.waitTime(5000);
-                    deviceController.setPitch((byte) 10);
-                    deviceController.waitTime(50);
-                    deviceController.setPitch((byte) 0);
-                    deviceController.setFlag((byte) 0);
-                    deviceController.waitTime(1000);
-
-                    deviceController.sendTakeoff();
                 }
             }
         });
@@ -198,7 +108,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                 {
                     deviceController.sendTakeoff();
                     deviceController.waitTime(5000);
-                    
+
                     for (int i=0; i<7; i++)
                     {
                         deviceController.setGaz((byte) 20);
@@ -506,9 +416,6 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         });
 
         batteryLabel = (TextView) findViewById(R.id.batteryLabel);
-
-        Intent intent = getIntent();
-        service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
 
         deviceController = new DeviceController(this, service);
         deviceController.setListener(this);

@@ -741,6 +741,68 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         return sentStatus;
     }
 
+    public void rotateLeft()
+    {
+        setYaw((byte) -52);
+        waitTime(1600);
+        setYaw((byte) 0);
+        waitTime(1000);
+
+    }
+
+    public void rotateRight()
+    {
+        setYaw((byte) 52);
+        waitTime(1600);
+        setYaw((byte) 0);
+        waitTime(1000);
+
+    }
+
+    public void rotateTotal()
+    {
+        setYaw((byte) 90);
+        waitTime(2000);
+        setYaw((byte) 0);
+        waitTime(1000);
+
+        /*
+        //opposite rotation
+        setYaw((byte) -90);
+        waitTime(2000);
+        setYaw((byte) 0);
+        waitTime(1000);
+         */
+    }
+
+    public void moveFront()
+    {
+        // 4 units
+        setPitch((byte) 10);
+        setFlag((byte) 1);
+        waitTime(5000);
+        setPitch((byte) -10);
+        waitTime(50);
+        setPitch((byte) 0);
+        setFlag((byte) 0);
+        waitTime(1000);
+
+    }
+
+    public void moveBack()
+    {
+        // 4 units
+        setPitch((byte) -10);
+        setFlag((byte) 1);
+        waitTime(5000);
+        setPitch((byte) 10);
+        waitTime(50);
+        setPitch((byte) 0);
+        setFlag((byte) 0);
+        waitTime(1000);
+
+    }
+
     public boolean sendDate(Date currentDate)
     {
         ARCOMMANDS_GENERATOR_ERROR_ENUM cmdError = ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK;
