@@ -24,6 +24,9 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     private Button emergencyBt;
     private Button takeoffBt;
     private Button landingBt;
+    private Button flipBt;
+    private Button pathBt;
+    private Button path2Bt;
 
     private Button gazUpBt;
     private Button gazDownBt;
@@ -54,6 +57,130 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                 if (deviceController != null)
                 {
                     deviceController.sendEmergency();
+                }
+            }
+        });
+
+        pathBt = (Button) findViewById(R.id.pathBt);
+        pathBt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                if (deviceController != null)
+                {
+                    // 3 straight lines.
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setPitch((byte) 10);
+                    deviceController.setFlag((byte) 1);
+                    deviceController.waitTime(5000);
+                    deviceController.setPitch((byte) 0);
+                    deviceController.setFlag((byte) 0);
+                    deviceController.setYaw((byte) 52);
+                    deviceController.waitTime(3000);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.setPitch((byte) 10);
+                    deviceController.setFlag((byte) 1);
+                    deviceController.waitTime(5000);
+                    deviceController.setPitch((byte) 0);
+                    deviceController.setFlag((byte) 0);
+                    /*
+                    deviceController.setYaw((byte) 52);
+                    deviceController.waitTime(3000);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.setPitch((byte) 10);
+                    deviceController.setFlag((byte) 1);
+                    deviceController.waitTime(5000);
+                    deviceController.setPitch((byte) 0);
+                    deviceController.setFlag((byte) 0);*/
+                    deviceController.sendLanding();
+                }
+            }
+        });
+
+        path2Bt = (Button) findViewById(R.id.path2Bt);
+        path2Bt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                if (deviceController != null)
+                {
+                    //yolo
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setGaz((byte) 20);
+                    deviceController.setYaw((byte) 50);
+                    deviceController.waitTime(3000);
+                    deviceController.setGaz((byte) 0);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.sendLanding();
+
+                    deviceController.waitTime(3000);
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setGaz((byte) 20);
+                    deviceController.setYaw((byte) 50);
+                    deviceController.waitTime(2500);
+                    deviceController.setGaz((byte) 0);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.sendLanding();
+
+                    deviceController.waitTime(3000);
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setGaz((byte) 20);
+                    deviceController.setYaw((byte) 50);
+                    deviceController.waitTime(2750);
+                    deviceController.setGaz((byte) 0);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.sendLanding();
+
+                    /*
+                    deviceController.waitTime(3000);
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setGaz((byte) 20);
+                    deviceController.setYaw((byte) 52);
+                    deviceController.waitTime(6000);
+                    deviceController.setGaz((byte) 0);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.sendLanding();
+
+                    deviceController.waitTime(3000);
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    deviceController.setGaz((byte) 20);
+                    deviceController.setYaw((byte) 75);
+                    deviceController.waitTime(6000);
+                    deviceController.setGaz((byte) 0);
+                    deviceController.setYaw((byte) 0);
+                    deviceController.sendLanding();
+                    */
+                }
+            }
+        });
+
+        flipBt = (Button) findViewById(R.id.flipBt);
+        flipBt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                if (deviceController != null)
+                {
+                    //deviceController.sendFlip();
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    for (int i=0; i<7; i++)
+                    {
+                        deviceController.setGaz((byte) 20);
+                        deviceController.setYaw((byte) 45);
+                        deviceController.waitTime(1000);
+                        deviceController.setGaz((byte) 0);
+                        deviceController.setYaw((byte) 0);
+                        deviceController.setPitch((byte) 10);
+                        deviceController.setFlag((byte) 1);
+                        deviceController.waitTime(2000);
+                        deviceController.setPitch((byte) 0);
+                        deviceController.setFlag((byte) 0);
+                    }
+                    deviceController.sendLanding();
                 }
             }
         });

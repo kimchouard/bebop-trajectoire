@@ -4,6 +4,7 @@ package com.parrot.bobopdronepiloting;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_DECODER_ERROR_ENUM;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_GENERATOR_ERROR_ENUM;
@@ -614,6 +615,42 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         return sentStatus;
     }
 
+    public boolean sendFlip()
+    {
+        ARCOMMANDS_GENERATOR_ERROR_ENUM cmdError = ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK;
+        boolean sentStatus = true;
+        ARCommand cmd = new ARCommand();
+
+        cmdError = cmd.setARDrone3AnimationsFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_BACK);
+        if (cmdError == ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK)
+        {
+            /* Send data with ARNetwork */
+            // The commands sent in loop should be sent to a buffer not acknowledged ; here iobufferC2dNack
+            ARNETWORK_ERROR_ENUM netError = netManager.sendData (iobufferC2dNack, cmd, null, true);
+
+            if (netError != ARNETWORK_ERROR_ENUM.ARNETWORK_OK)
+            {
+                ARSALPrint.e(TAG, "netManager.sendData() failed. " + netError.toString());
+                sentStatus = false;
+            }
+
+            cmd.dispose();
+        }
+
+        if (sentStatus == false)
+        {
+            ARSALPrint.e(TAG, "Failed to send PCMD command.");
+        }
+
+        return sentStatus;
+    }
+
+    public void waitTime(long time)
+    {
+        long currentTime = System.currentTimeMillis();
+        long finalTime = currentTime + time;
+        while(System.currentTimeMillis() < finalTime) {}
+    }
     public boolean sendTakeoff()
     {
         ARCOMMANDS_GENERATOR_ERROR_ENUM cmdError = ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK;

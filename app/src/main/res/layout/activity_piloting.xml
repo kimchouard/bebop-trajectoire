@@ -17,6 +17,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Flip"
+        android:id="@+id/flipBt"
+        android:layout_below="@+id/emergencyBt"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Landing"
         android:id="@+id/landingBt"
         android:layout_alignParentBottom="true"
@@ -155,4 +163,24 @@
         android:layout_alignRight="@+id/gazDownBt"
         android:layout_alignEnd="@+id/gazDownBt"
         android:gravity="center_horizontal"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Path"
+        android:id="@+id/pathBt"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Path2"
+        android:id="@+id/path2Bt"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/path2Bt"
+        android:layout_toStartOf="@+id/path2Bt" />
 </RelativeLayout>
