@@ -34,6 +34,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     public DeviceController deviceController;
     public ARDiscoveryDeviceService service;
     public ArrayList<String> cmd;
+    public ArrayList<String> param;
 
     private Button emergencyBt;
     private Button takeoffBt;
@@ -87,6 +88,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         Intent intent = getIntent();
         service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
         cmd = intent.getStringArrayListExtra(PlanificationActivity.COMMAND_LIST);
+        param = intent.getStringArrayListExtra(PlanificationActivity.PARAM_LIST);
 
         emergencyBt = (Button) findViewById(R.id.emergencyBt);
         emergencyBt.setOnClickListener(new View.OnClickListener() {
@@ -112,22 +114,28 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                         switch (cmd.get(i))
                         {
                             case "Avancer" :
-                                deviceController.moveFront();
+                                deviceController.moveFront(Integer.parseInt(param.get(i)));
                                 break;
                             case "Reculer" :
-                                deviceController.moveBack();
+                                deviceController.moveBack(Integer.parseInt(param.get(i)));
                                 break;
                             case "Tourner à gauche" :
-                                deviceController.turnLeft();
+                                deviceController.turnLeft(Integer.parseInt(param.get(i)));
                                 break;
                             case "Tourner à droite" :
-                                deviceController.turnRight();
+                                deviceController.turnRight(Integer.parseInt(param.get(i)));
                                 break;
                             case "Monter" :
-                                deviceController.moveUp();
+                                deviceController.moveUp(Integer.parseInt(param.get(i)));
                                 break;
                             case "Descendre" :
-                                deviceController.moveDown();
+                                deviceController.moveDown(Integer.parseInt(param.get(i)));
+                                break;
+                            case "Glisser à gauche" :
+                                deviceController.rollLeft(Integer.parseInt(param.get(i)));
+                                break;
+                            case "Glisser à droite" :
+                                deviceController.rollRight(Integer.parseInt(param.get(i)));
                                 break;
                             case "Back flip" :
                                 deviceController.backFlip();
@@ -143,6 +151,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                                 break;
                             case "Demi-tour" :
                                 deviceController.turnAround();
+                                break;
                             default:
                                 break;
                         }

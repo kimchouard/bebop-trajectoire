@@ -21,6 +21,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
 {
     private static String TAG = PlanificationActivity.class.getSimpleName();
     public static String COMMAND_LIST = "planificationActivity.extra.device.command";
+    public static String PARAM_LIST = "planificationActivity.extra.device.param";
     public ARDiscoveryDeviceService service;
 
     private LinearLayout Layoutprincipal = null;
@@ -28,7 +29,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
     private String valeurs;
     private EditText duree;
 
-    private static String[] items={"Monter", "Descendre", "Avancer", "Reculer", "Tourner à gauche",
+    private static String[] items={"Monter", "Descendre", "Avancer", "Reculer", "Glisser à gauche", "Glisser à droite", "Tourner à gauche",
             "Tourner à droite", "Left flip", "Right flip", "Back flip", "Front flip", "Demi-tour"};
     private List Actions = new ArrayList();
     private List Parametres = new ArrayList();
@@ -71,7 +72,12 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
     public void Ajoutcomp(View v){
 
         Actions.add(valeurs);
-        Parametres.add(String.valueOf(duree.getText()));
+        if (valeurs.contains("flip"))
+        {
+            Parametres.add("0");
+        } else {
+            Parametres.add(String.valueOf(duree.getText()));
+        }
         affichercommandes(Actions,Parametres,v);
     }
 
@@ -102,7 +108,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
             }
             else
             {
-                textView4.setText("m");
+                textView4.setText("s");
             }
             ll.addView(textView1); // Attache le TextView au layout parent
             ll.addView(textView2);
@@ -116,6 +122,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
         Intent intent = new Intent(PlanificationActivity.this, PilotingActivity.class);
         intent.putExtra(PilotingActivity.EXTRA_DEVICE_SERVICE, service);
         intent.putStringArrayListExtra(PlanificationActivity.COMMAND_LIST, (ArrayList<String>) this.Actions);
+        intent.putStringArrayListExtra(PlanificationActivity.PARAM_LIST, (ArrayList<String>) this.Parametres);
 
         startActivity(intent);
     }

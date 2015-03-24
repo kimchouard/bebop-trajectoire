@@ -729,19 +729,21 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         return sentStatus;
     }
 
-    public void turnLeft()
+    public void turnLeft(int time)
     {
+        //90 : 1600
         setYaw((byte) -52);
-        waitTime(1600);
+        waitTime(time);
         setYaw((byte) 0);
         waitTime(1000);
 
     }
 
-    public void turnRight()
+    public void turnRight(int time)
     {
+        //90 : 1600
         setYaw((byte) 52);
-        waitTime(1600);
+        waitTime(time);
         setYaw((byte) 0);
         waitTime(1000);
 
@@ -763,45 +765,68 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
          */
     }
 
-    public void moveFront()
+    public void moveFront(int time)
     {
-        // 4 units
+        // 4 units : 5000
         setPitch((byte) 10);
         setFlag((byte) 1);
-        waitTime(5000);
+        waitTime(time);
         setPitch((byte) -10);
-        waitTime(50);
-        setPitch((byte) 0);
-        setFlag((byte) 0);
-        waitTime(1000);
-
-    }
-
-    public void moveBack()
-    {
-        // 4 units
-        setPitch((byte) -10);
-        setFlag((byte) 1);
-        waitTime(5000);
-        setPitch((byte) 10);
         waitTime(50);
         setPitch((byte) 0);
         setFlag((byte) 0);
         waitTime(1000);
     }
 
-    public void moveUp()
+    public void rollLeft(int time)
+    {
+        setRoll((byte) -10);
+        setFlag((byte) 1);
+        waitTime(time);
+        setRoll((byte) 10);
+        waitTime(50);
+        setRoll((byte) 0);
+        setFlag((byte) 0);
+        waitTime(1000);
+    }
+
+    public void rollRight(int time)
+    {
+        setRoll((byte) 10);
+        setFlag((byte) 1);
+        waitTime(time);
+        setRoll((byte) -10);
+        waitTime(50);
+        setRoll((byte) 0);
+        setFlag((byte) 0);
+        waitTime(1000);
+    }
+
+    public void moveBack(int time)
+    {
+        // 4 units : 5000
+        setPitch((byte) -10);
+        setFlag((byte) 1);
+        waitTime(time);
+        setPitch((byte) 10);
+        waitTime(50);
+        setPitch((byte) 0);
+        setFlag((byte) 0);
+        waitTime(1000);
+    }
+
+    public void moveUp(int time)
     {
         setGaz((byte) 20);
-        waitTime(3000);
+        waitTime(time);
         setGaz((byte) 0);
         waitTime(1000);
     }
 
-    public void moveDown()
+    public void moveDown(int time)
     {
         setGaz((byte) -20);
-        waitTime(3000);
+        waitTime(time);
         setGaz((byte) 0);
         waitTime(1000);
     }
