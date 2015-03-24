@@ -3,5 +3,8 @@
 
     <string name="app_name">BebopDronePiloting</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_planification">PlanificationActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -22,6 +22,7 @@ import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATE
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
 
+import java.util.ArrayList;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -32,10 +33,13 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
 
     public DeviceController deviceController;
     public ARDiscoveryDeviceService service;
+    public ArrayList<String> cmd;
 
     private Button emergencyBt;
     private Button takeoffBt;
     private Button landingBt;
+    private Button flipBt;
+    private Button pathBt;
 
     private Button gazUpBt;
     private Button gazDownBt;
@@ -80,6 +84,10 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_piloting);
 
+        Intent intent = getIntent();
+        service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
+        cmd = intent.getStringArrayListExtra(PlanificationActivity.COMMAND_LIST);
+
         emergencyBt = (Button) findViewById(R.id.emergencyBt);
         emergencyBt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
@@ -87,6 +95,77 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                 if (deviceController != null)
                 {
                     deviceController.sendEmergency();
+                }
+            }
+        });
+
+        pathBt = (Button) findViewById(R.id.pathBt);
+        pathBt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                if (deviceController != null)
+                {
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+                    for (int i=0; i<cmd.size(); i++)
+                    {
+                        switch (cmd.get(i))
+                        {
+                            case "Avancer" :
+                                deviceController.moveFront();
+                                break;
+                            case "Reculer" :
+                                deviceController.moveBack();
+                                break;
+                            case "Tourner à gauche" :
+                                deviceController.rotateLeft();
+                                break;
+                            case "Tourner à droite" :
+                                deviceController.rotateRight();
+                                break;
+                            case "Monter" :
+                                deviceController.moveUp();
+                                break;
+                            case "Descendre" :
+                                deviceController.moveDown();
+                                break;
+                            case "Flip" :
+                                deviceController.sendFlip();
+                                deviceController.waitTime(3000);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    deviceController.sendLanding();
+                }
+            }
+        });
+
+        flipBt = (Button) findViewById(R.id.flipBt);
+        flipBt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                if (deviceController != null)
+                {
+                    deviceController.sendTakeoff();
+                    deviceController.waitTime(5000);
+
+                    for (int i=0; i<7; i++)
+                    {
+                        deviceController.setGaz((byte) 20);
+                        deviceController.setYaw((byte) 45);
+                        deviceController.waitTime(1000);
+                        deviceController.setGaz((byte) 0);
+                        deviceController.setYaw((byte) 0);
+                        deviceController.setPitch((byte) 10);
+                        deviceController.setFlag((byte) 1);
+                        deviceController.waitTime(2000);
+                        deviceController.setPitch((byte) 0);
+                        deviceController.setFlag((byte) 0);
+                    }
+
+                    deviceController.sendLanding();
                 }
             }
         });
@@ -386,9 +465,6 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         longitudeLabel = (TextView) findViewById(R.id.longitudeValue);
         latitudeLabel = (TextView) findViewById(R.id.latitudeValue);
         GPSLabel = (TextView) findViewById(R.id.GPLValue);
-
-        Intent intent = getIntent();
-        service = intent.getParcelableExtra(EXTRA_DEVICE_SERVICE);
 
         deviceController = new DeviceController(this, service);
         deviceController.setListener(this);
