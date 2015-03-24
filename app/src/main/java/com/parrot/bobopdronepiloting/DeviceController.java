@@ -800,7 +800,22 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         setPitch((byte) 0);
         setFlag((byte) 0);
         waitTime(1000);
+    }
 
+    public void moveUp()
+    {
+        setGaz((byte) 20);
+        waitTime(3000);
+        setGaz((byte) 0);
+        waitTime(1000);
+    }
+
+    public void moveDown()
+    {
+        setGaz((byte) -20);
+        waitTime(3000);
+        setGaz((byte) 0);
+        waitTime(1000);
     }
 
     public boolean sendDate(Date currentDate)

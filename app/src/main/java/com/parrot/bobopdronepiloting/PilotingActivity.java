@@ -83,13 +83,22 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                                 deviceController.moveFront();
                                 break;
                             case "Reculer" :
-                                deviceController.moveFront();
+                                deviceController.moveBack();
                                 break;
                             case "Tourner à gauche" :
-                                deviceController.moveFront();
+                                deviceController.rotateLeft();
                                 break;
                             case "Tourner à droite" :
-                                deviceController.moveFront();
+                                deviceController.rotateRight();
+                                break;
+                            case "Monter" :
+                                deviceController.moveUp();
+                                break;
+                            case "Descendre" :
+                                deviceController.moveDown();
+                                break;
+                            case "Flip" :
+                                deviceController.sendFlip();
                                 break;
                             default:
                                 break;
