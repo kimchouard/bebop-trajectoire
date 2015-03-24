@@ -10,9 +10,15 @@ import com.parrot.arsdk.arcommands.ARCOMMANDS_DECODER_ERROR_ENUM;
 import com.parrot.arsdk.arcommands.ARCOMMANDS_GENERATOR_ERROR_ENUM;
 import com.parrot.arsdk.arcommands.ARCommand;
 import com.parrot.arsdk.arcommands.ARCommandARDrone3PilotingStateFlyingStateChangedListener;
+import com.parrot.arsdk.arcommands.ARCommandARDrone3PilotingStateAttitudeChangedListener;
+import com.parrot.arsdk.arcommands.ARCommandARDrone3PilotingStateAltitudeChangedListener;
+import com.parrot.arsdk.arcommands.ARCommandARDrone3PilotingStatePositionChangedListener;
+import com.parrot.arsdk.arcommands.ARCommandARDrone3GPSSettingsStateGPSUpdateStateChangedListener;
 import com.parrot.arsdk.arcommands.ARCommandCommonCommonStateAllStatesChangedListener;
 import com.parrot.arsdk.arcommands.ARCommandCommonCommonStateBatteryStateChangedListener;
 import com.parrot.arsdk.arcommands.ARCommandCommonSettingsStateAllSettingsChangedListener;
+import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM;
+import com.parrot.arsdk.arcommands.ARCommandCommonGPSControllerPositionForRunListener;
 import com.parrot.arsdk.ardiscovery.ARDISCOVERY_ERROR_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryConnection;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceBLEService;
@@ -39,7 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
-public class DeviceController implements ARCommandCommonCommonStateBatteryStateChangedListener, ARCommandCommonSettingsStateAllSettingsChangedListener, ARCommandCommonCommonStateAllStatesChangedListener, ARCommandARDrone3PilotingStateFlyingStateChangedListener
+public class DeviceController implements ARCommandCommonCommonStateBatteryStateChangedListener, ARCommandCommonSettingsStateAllSettingsChangedListener, ARCommandCommonCommonStateAllStatesChangedListener, ARCommandARDrone3PilotingStateFlyingStateChangedListener, ARCommandARDrone3PilotingStateAltitudeChangedListener, ARCommandARDrone3PilotingStateAttitudeChangedListener, ARCommandARDrone3PilotingStatePositionChangedListener, ARCommandARDrone3GPSSettingsStateGPSUpdateStateChangedListener, ARCommandCommonGPSControllerPositionForRunListener
 {
     private static String TAG = "DeviceController";
 
@@ -481,24 +487,6 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         }
     }
 
-
-
-    protected void registerARCommandsListener ()
-    {
-        ARCommand.setCommonSettingsStateAllSettingsChangedListener(this);
-        ARCommand.setCommonCommonStateAllStatesChangedListener(this);
-        ARCommand.setCommonCommonStateBatteryStateChangedListener(this);
-        ARCommand.setARDrone3PilotingStateFlyingStateChangedListener(this);
-    }
-
-    protected void unregisterARCommandsListener ()
-    {
-        ARCommand.setCommonSettingsStateAllSettingsChangedListener(null);
-        ARCommand.setCommonCommonStateAllStatesChangedListener(null);
-        ARCommand.setCommonCommonStateBatteryStateChangedListener(null);
-        ARCommand.setARDrone3PilotingStateFlyingStateChangedListener(null);
-    }
-
     public boolean getInitialSettings()
     {
         /* Attempt to get initial settings */
@@ -892,46 +880,6 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         dataPCMD.yaw = yaw;
     }
 
-    public void setListener(DeviceControllerListener listener)
-    {
-        this.listener = listener;
-    }
-
-    @Override
-    public void onCommonSettingsStateAllSettingsChangedUpdate ()
-    {
-        cmdGetAllSettingsSent.release();
-        Log.i(TAG, "All settings received");
-    }
-
-    @Override
-    public void onCommonCommonStateAllStatesChangedUpdate ()
-    {
-        cmdGetAllStatesSent.release();
-        Log.i(TAG, "All states received");
-    }
-
-    @Override
-    public void onCommonCommonStateBatteryStateChangedUpdate(byte b)
-    {
-        Log.d(TAG, "onCommonCommonStateBatteryStateChangedUpdate ...");
-
-        if (listener != null)
-        {
-            listener.onUpdateBattery(b);
-        }
-    }
-
-    @Override
-    public void onARDrone3PilotingStateFlyingStateChangedUpdate(ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM state)
-    {
-        Log.d(TAG, "onARDrone3PilotingStateFlyingStateChangedUpdate : " + state);
-
-        if (listener != null) {
-            listener.onFlyingStateChanged(state);
-        }
-    }
-
     /**
      * Extend of ARNetworkManager implementing the callback
      */
@@ -1150,5 +1098,124 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         {
             return error;
         }
+    }
+
+    public void setListener(DeviceControllerListener listener)
+    {
+        this.listener = listener;
+    }
+
+    @Override
+    public void onCommonSettingsStateAllSettingsChangedUpdate ()
+    {
+        cmdGetAllSettingsSent.release();
+        Log.i(TAG, "All settings received");
+    }
+
+    @Override
+    public void onCommonCommonStateAllStatesChangedUpdate ()
+    {
+        cmdGetAllStatesSent.release();
+        Log.i(TAG, "All states received");
+    }
+
+    @Override
+    public void onCommonCommonStateBatteryStateChangedUpdate(byte b)
+    {
+        Log.d(TAG, "onCommonCommonStateBatteryStateChangedUpdate ...");
+
+        if (listener != null)
+        {
+            listener.onUpdateBattery(b);
+        }
+    }
+
+    @Override
+    public void onARDrone3PilotingStateFlyingStateChangedUpdate(ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM state)
+    {
+        Log.d(TAG, "onARDrone3PilotingStateFlyingStateChangedUpdate : " + state);
+
+        if (listener != null) {
+            listener.onFlyingStateChanged(state);
+        }
+    }
+
+    @Override
+    public void onARDrone3PilotingStateAltitudeChangedUpdate(double altitude)
+    {
+        Log.d(TAG, "onARDrone3PilotingStateAltitudeChangedUpdate ... " + altitude);
+
+        if (listener != null)
+        {
+            listener.onAltitudeChanged(altitude);
+        }
+    }
+
+    @Override
+    public void onARDrone3PilotingStateAttitudeChangedUpdate(float roll, float pitch, float yaw)
+    {
+        Log.d(TAG, "onARDrone3PilotingStateAttitudeChangedUpdate ... ("+roll+", "+pitch+", "+yaw+")");
+
+        if (listener != null)
+        {
+            listener.onAttitudeChanged(roll, pitch, yaw);
+        }
+    }
+
+    @Override
+    public void onARDrone3PilotingStatePositionChangedUpdate(double latitude, double longitude, double altitude)
+    {
+        Log.d(TAG, "onARDrone3PilotingStateFlyingStateChangedUpdate : ("+latitude+", "+longitude+", "+altitude+")");
+
+        if (listener != null) {
+            listener.onAltitudeChanged(altitude);            listener.onPositionChanged(latitude, longitude, altitude);
+        }
+    }
+
+    @Override
+    public void onARDrone3GPSSettingsStateGPSUpdateStateChangedUpdate(ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM state)
+    {
+        Log.d(TAG, "onARDrone3GPSSettingsStateGPSUpdateStateChangedUpdate : " + state);
+
+        if (listener != null) {
+            listener.onGPSStatusChanged(state);
+        }
+    }
+
+    @Override
+    public void onCommonGPSControllerPositionForRunUpdate(double latitude, double longitude)
+    {
+        Log.d(TAG, "onCommonGPSControllerPositionForRunUpdate : ("+latitude+", "+longitude+")");
+
+        if (listener != null) {
+            listener.onPositionChanged(latitude, longitude, -1);
+        }
+    }
+
+    protected void registerARCommandsListener ()
+    {
+        ARCommand.setCommonSettingsStateAllSettingsChangedListener(this);
+        ARCommand.setCommonCommonStateAllStatesChangedListener(this);
+        ARCommand.setCommonCommonStateBatteryStateChangedListener(this);
+        ARCommand.setARDrone3PilotingStateFlyingStateChangedListener(this);
+        ARCommand.setARDrone3PilotingStateAltitudeChangedListener(this);
+        ARCommand.setARDrone3PilotingStateAttitudeChangedListener(this);
+        ARCommand.setARDrone3PilotingStatePositionChangedListener(this);
+        ARCommand.setARDrone3GPSSettingsStateGPSUpdateStateChangedListener(this);
+//        ARCommand.setCommonGPSControllerPositionForRunListener(this);
+
+    }
+
+    protected void unregisterARCommandsListener ()
+    {
+        ARCommand.setCommonSettingsStateAllSettingsChangedListener(null);
+        ARCommand.setCommonCommonStateAllStatesChangedListener(null);
+        ARCommand.setCommonCommonStateBatteryStateChangedListener(null);
+        ARCommand.setARDrone3PilotingStateFlyingStateChangedListener(null);
+        ARCommand.setARDrone3PilotingStateAltitudeChangedListener(null);
+        ARCommand.setARDrone3PilotingStateAttitudeChangedListener(null);
+        ARCommand.setARDrone3PilotingStatePositionChangedListener(null);
+        ARCommand.setARDrone3GPSSettingsStateGPSUpdateStateChangedListener(null);
+//        ARCommand.setCommonGPSControllerPositionForRunListener(null);
     }
 }
