@@ -29,7 +29,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
     private EditText duree;
 
     private static String[] items={"Monter", "Descendre", "Avancer", "Reculer", "Tourner à gauche",
-            "Tourner à droite", "Left flip", "Right flip", "Back flip", "Front flip"};
+            "Tourner à droite", "Left flip", "Right flip", "Back flip", "Front flip", "Demi-tour"};
     private List Actions = new ArrayList();
     private List Parametres = new ArrayList();
 

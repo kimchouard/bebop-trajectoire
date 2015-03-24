@@ -729,7 +729,7 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         return sentStatus;
     }
 
-    public void rotateLeft()
+    public void turnLeft()
     {
         setYaw((byte) -52);
         waitTime(1600);
@@ -738,7 +738,7 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
 
     }
 
-    public void rotateRight()
+    public void turnRight()
     {
         setYaw((byte) 52);
         waitTime(1600);
@@ -747,7 +747,7 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
 
     }
 
-    public void rotateTotal()
+    public void turnAround()
     {
         setYaw((byte) 90);
         waitTime(2000);

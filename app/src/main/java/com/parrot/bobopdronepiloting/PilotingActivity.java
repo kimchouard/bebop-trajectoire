@@ -118,10 +118,10 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                                 deviceController.moveBack();
                                 break;
                             case "Tourner à gauche" :
-                                deviceController.rotateLeft();
+                                deviceController.turnLeft();
                                 break;
                             case "Tourner à droite" :
-                                deviceController.rotateRight();
+                                deviceController.turnRight();
                                 break;
                             case "Monter" :
                                 deviceController.moveUp();
@@ -141,6 +141,8 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                             case "Right flip" :
                                 deviceController.rightFlip();
                                 break;
+                            case "Demi-tour" :
+                                deviceController.turnAround();
                             default:
                                 break;
                         }
