@@ -129,9 +129,17 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                             case "Descendre" :
                                 deviceController.moveDown();
                                 break;
-                            case "Flip" :
-                                deviceController.sendFlip();
-                                deviceController.waitTime(3000);
+                            case "Back flip" :
+                                deviceController.backFlip();
+                                break;
+                            case "Front flip" :
+                                deviceController.frontFlip();
+                                break;
+                            case "Left flip" :
+                                deviceController.leftFlip();
+                                break;
+                            case "Right flip" :
+                                deviceController.rightFlip();
                                 break;
                             default:
                                 break;

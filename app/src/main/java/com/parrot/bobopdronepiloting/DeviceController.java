@@ -603,13 +603,13 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         return sentStatus;
     }
 
-    public boolean sendFlip()
+    public boolean sendFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM direction)
     {
         ARCOMMANDS_GENERATOR_ERROR_ENUM cmdError = ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK;
         boolean sentStatus = true;
         ARCommand cmd = new ARCommand();
 
-        cmdError = cmd.setARDrone3AnimationsFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_BACK);
+        cmdError = cmd.setARDrone3AnimationsFlip(direction);
         if (cmdError == ARCOMMANDS_GENERATOR_ERROR_ENUM.ARCOMMANDS_GENERATOR_OK)
         {
             /* Send data with ARNetwork */
@@ -804,6 +804,30 @@ public class DeviceController implements ARCommandCommonCommonStateBatteryStateC
         waitTime(3000);
         setGaz((byte) 0);
         waitTime(1000);
+    }
+
+    public void backFlip()
+    {
+        sendFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_BACK);
+        waitTime(3000);
+    }
+
+    public void frontFlip()
+    {
+        sendFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_FRONT);
+        waitTime(3000);
+    }
+
+    public void leftFlip()
+    {
+        sendFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_LEFT);
+        waitTime(3000);
+    }
+
+    public void rightFlip()
+    {
+        sendFlip(ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_ENUM.ARCOMMANDS_ARDRONE3_ANIMATIONS_FLIP_DIRECTION_RIGHT);
+        waitTime(3000);
     }
 
     public boolean sendDate(Date currentDate)

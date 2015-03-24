@@ -19,7 +19,7 @@ import java.util.List;
 
 public class PlanificationActivity extends Activity implements AdapterView.OnItemSelectedListener
 {
-    private static String TAG = PilotingActivity.class.getSimpleName();
+    private static String TAG = PlanificationActivity.class.getSimpleName();
     public static String COMMAND_LIST = "planificationActivity.extra.device.command";
     public ARDiscoveryDeviceService service;
 
@@ -29,7 +29,7 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
     private EditText duree;
 
     private static String[] items={"Monter", "Descendre", "Avancer", "Reculer", "Tourner à gauche",
-            "Tourner à droite", "Flip"};
+            "Tourner à droite", "Left flip", "Right flip", "Back flip", "Front flip"};
     private List Actions = new ArrayList();
     private List Parametres = new ArrayList();
 
@@ -38,8 +38,8 @@ public class PlanificationActivity extends Activity implements AdapterView.OnIte
         super.onCreate(bnd);
         setContentView(R.layout.activity_planification);
         duree=(EditText)findViewById(R.id.editText2);
-        Spinner spin=(Spinner)findViewById(R.id.spinner);
 
+        Spinner spin=(Spinner)findViewById(R.id.spinner);
         spin.setFocusable(true);
         spin.setFocusableInTouchMode(true);
         spin.requestFocus();
