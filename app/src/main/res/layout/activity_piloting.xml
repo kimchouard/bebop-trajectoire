@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:text="Emergency"
         android:id="@+id/emergencyBt"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:width="150dp"/>
+        android:width="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -27,97 +27,97 @@
         android:layout_height="wrap_content"
         android:text="Landing"
         android:id="@+id/landingBt"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:width="150dp"/>
+        android:width="150dp"
+        android:layout_below="@+id/takeoffBt"
+        android:layout_alignLeft="@+id/takeoffBt"
+        android:layout_alignStart="@+id/takeoffBt" />
 
     <Button
-        android:layout_width="75dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="right"
+        android:text="R"
         android:id="@+id/yawRightBt"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"/>
+        android:layout_above="@+id/gazDownBt"
+        android:layout_alignParentRight="true" />
 
     <Button
-        android:layout_width="75dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="left"
+        android:text="L"
         android:id="@+id/rollLeftBt"
-        android:layout_centerVertical="true"
+        android:width="50dp"
+        android:layout_above="@+id/backBt"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:width="50dp"/>
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Takeoff"
         android:id="@+id/takeoffBt"
-        android:layout_above="@+id/landingBt"
-        android:layout_alignLeft="@+id/landingBt"
-        android:layout_alignStart="@+id/landingBt"
-        android:width="150dp"/>
+        android:width="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
-        android:layout_width="75dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="left"
+        android:text="L"
         android:id="@+id/yawLeftBt"
         android:layout_below="@+id/gazUpBt"
         android:layout_toLeftOf="@+id/gazUpBt"
         android:layout_toStartOf="@+id/gazUpBt"/>
 
     <Button
-        android:layout_width="75dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="right"
+        android:text="R"
         android:id="@+id/rollRightBt"
         android:width="20dp"
         android:layout_above="@+id/backBt"
         android:layout_toRightOf="@+id/backBt"
-        android:layout_toEndOf="@+id/backBt"/>
+        android:layout_toEndOf="@+id/backBt" />
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="up"
+        android:text="U"
         android:id="@+id/gazUpBt"
+        android:width="100dp"
         android:layout_above="@+id/yawRightBt"
         android:layout_toLeftOf="@+id/yawRightBt"
-        android:layout_toStartOf="@+id/yawRightBt"
-        android:width="100dp"/>
+        android:layout_toStartOf="@+id/yawRightBt" />
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="down"
+        android:text="D"
         android:id="@+id/gazDownBt"
         android:width="100dp"
-        android:layout_below="@+id/yawRightBt"
-        android:layout_toRightOf="@+id/yawLeftBt"
-        android:layout_toEndOf="@+id/yawLeftBt"/>
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/yawRightBt"
+        android:layout_toStartOf="@+id/yawRightBt" />
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="forward"
+        android:text="F"
         android:id="@+id/forwardBt"
-        android:layout_alignTop="@+id/gazUpBt"
+        android:width="100dp"
+        android:layout_above="@+id/rollLeftBt"
         android:layout_toRightOf="@+id/rollLeftBt"
-        android:layout_toEndOf="@+id/rollLeftBt"
-        android:width="100dp"/>
+        android:layout_toEndOf="@+id/rollLeftBt" />
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="back"
+        android:text="B"
         android:id="@+id/backBt"
-        android:layout_below="@+id/rollLeftBt"
+        android:width="100dp"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/rollLeftBt"
-        android:layout_toEndOf="@+id/rollLeftBt"
-        android:width="100dp"/>
+        android:layout_toEndOf="@+id/rollLeftBt" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -125,9 +125,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Battery: "
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_above="@+id/emergencyBt"
+        android:layout_alignLeft="@+id/emergencyBt"
+        android:layout_alignStart="@+id/emergencyBt" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -135,34 +135,166 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="XXX%"
         android:id="@+id/batteryLabel"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"/>
+        android:layout_above="@+id/emergencyBt"
+        android:layout_alignRight="@+id/emergencyBt"
+        android:layout_alignEnd="@+id/emergencyBt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="GPS: "
+        android:id="@+id/GPSLabel"
+        android:layout_above="@+id/textView"
+        android:layout_alignLeft="@+id/emergencyBt"
+        android:layout_alignStart="@+id/emergencyBt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/GPLValue"
+        android:layout_above="@+id/textView"
+        android:layout_alignRight="@+id/emergencyBt"
+        android:layout_alignEnd="@+id/emergencyBt" />
 
     <TextView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="roll"
-        android:id="@+id/textView2"
+        android:text="Roll"
+        android:id="@+id/rollLabel"
+        android:width="50dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal|right"
+        android:layout_below="@+id/yawLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/rollValue"
         android:width="50dp"
         android:textAlignment="center"
         android:gravity="center_horizontal"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/rollLeftBt"
-        android:layout_toEndOf="@+id/rollLeftBt"/>
+        android:layout_alignTop="@+id/rollLabel"
+        android:layout_toRightOf="@+id/rollLabel"
+        android:layout_toEndOf="@+id/rollLabel" />
 
     <TextView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="yaw"
-        android:id="@+id/textView3"
+        android:text="Yaw"
+        android:id="@+id/yawLabel"
         android:width="50dp"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_alignRight="@+id/gazDownBt"
-        android:layout_alignEnd="@+id/gazDownBt"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal|right"
+        android:layout_below="@+id/pitchLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/yawValue"
+        android:width="50dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/pitchLabel"
+        android:layout_toRightOf="@+id/yawLabel"
+        android:layout_toEndOf="@+id/yawLabel" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Pitch"
+        android:id="@+id/pitchLabel"
+        android:width="50dp"
+        android:gravity="center_horizontal|right"
+        android:layout_below="@+id/altitudeLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/pitchValue"
+        android:width="50dp"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/yawValue"
+        android:layout_toRightOf="@+id/yawLabel"
+        android:layout_toEndOf="@+id/yawLabel" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Altitude"
+        android:id="@+id/altitudeLabel"
+        android:width="50dp"
+        android:gravity="center_horizontal|right"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/altitudeValue"
+        android:width="50dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/altitudeLabel"
+        android:layout_toEndOf="@+id/altitudeLabel" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Latitude"
+        android:id="@+id/latitudeLabel"
+        android:width="50dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal|right"
+        android:layout_below="@+id/rollLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/latitudeValue"
+        android:width="50dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@+id/latitudeLabel"
+        android:layout_toRightOf="@+id/latitudeLabel"
+        android:layout_toEndOf="@+id/latitudeLabel" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Longitude"
+        android:id="@+id/longitudeLabel"
+        android:width="50dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal|right"
+        android:layout_below="@+id/latitudeLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -170,7 +302,20 @@
         android:layout_height="wrap_content"
         android:text="Path"
         android:id="@+id/pathBt"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/landingBt"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="N/A"
+        android:id="@+id/longitudeValue"
+        android:width="50dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:layout_alignTop="@+id/longitudeLabel"
+        android:layout_toRightOf="@+id/latitudeLabel"
+        android:layout_toEndOf="@+id/latitudeLabel" />
 </RelativeLayout>

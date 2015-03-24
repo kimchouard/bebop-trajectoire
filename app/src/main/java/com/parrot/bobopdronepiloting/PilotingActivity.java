@@ -2,18 +2,29 @@ package com.parrot.bobopdronepiloting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.parrot.bebopdronepiloting.R;
 
+import android.os.Environment;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_PILOTINGSTATE_FLYINGSTATECHANGED_STATE_ENUM;
+import com.parrot.arsdk.arcommands.ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM;
 import com.parrot.arsdk.ardiscovery.ARDiscoveryDeviceService;
 
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class PilotingActivity extends Activity implements DeviceControllerListener
 {
@@ -41,8 +52,29 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     private Button rollRightBt;
 
     private TextView batteryLabel;
+    private TextView altitudeLabel;
+    private TextView rollLabel;
+    private TextView yawLabel;
+    private TextView pitchLabel;
+    private TextView longitudeLabel;
+    private TextView latitudeLabel;
+    private TextView GPSLabel;
 
     private AlertDialog alertDialog;
+
+    File fGPSLog;
+    FileOutputStream fsGPSLog;
+    OutputStreamWriter fswGPSLog;
+    private static String GPSLogFilename = "gps.log.";
+    File fSensorsLog;
+    FileOutputStream fsSensorsLog;
+    OutputStreamWriter fswSensorsLog;
+    private static String SensorsLogFilename = "sensors.log.";
+    File fHeightLog;
+    FileOutputStream fsHeightLog;
+    OutputStreamWriter fswHeightLog;
+    private static String HeightLogFilename = "height.log.";
+    Time time;
 
 
 
@@ -99,6 +131,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                                 break;
                             case "Flip" :
                                 deviceController.sendFlip();
+                                deviceController.waitTime(3000);
                                 break;
                             default:
                                 break;
@@ -425,9 +458,96 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
         });
 
         batteryLabel = (TextView) findViewById(R.id.batteryLabel);
+        altitudeLabel = (TextView) findViewById(R.id.altitudeValue);
+        rollLabel = (TextView) findViewById(R.id.rollValue);
+        pitchLabel = (TextView) findViewById(R.id.pitchValue);
+        yawLabel = (TextView) findViewById(R.id.yawValue);
+        longitudeLabel = (TextView) findViewById(R.id.longitudeValue);
+        latitudeLabel = (TextView) findViewById(R.id.latitudeValue);
+        GPSLabel = (TextView) findViewById(R.id.GPLValue);
 
         deviceController = new DeviceController(this, service);
         deviceController.setListener(this);
+
+        initLogs();
+    }
+
+    private void initLogs()
+    {
+        // write on SD card file data in the text box
+        try {
+            time = new Time();
+            time.setToNow();
+            Long millis = time.toMillis(false);
+
+            // Init gps logs
+            fGPSLog = new File(Environment.getExternalStorageDirectory() + File.separator + GPSLogFilename + millis.toString() + ".csv");
+            fGPSLog.createNewFile();
+            fsGPSLog = new FileOutputStream(fGPSLog);
+            fswGPSLog = new OutputStreamWriter(fsGPSLog);
+            String GPSheader = "Time,Lattitude,Longitude,Altitude";
+            writeGPSLog(GPSheader);
+
+            // Init sensor logs
+            fSensorsLog = new File(Environment.getExternalStorageDirectory() + File.separator + SensorsLogFilename + millis.toString() + ".csv");
+            fSensorsLog.createNewFile();
+            fsSensorsLog = new FileOutputStream(fSensorsLog);
+            fswSensorsLog= new OutputStreamWriter(fsSensorsLog);
+            String SensorHeader = "Time,Roll,Pitch,Yaw";
+            writeSensorLog(SensorHeader);
+
+            // Init height logs
+            fHeightLog = new File(Environment.getExternalStorageDirectory() + File.separator + HeightLogFilename + millis.toString() + ".csv");
+            fHeightLog.createNewFile();
+            fsHeightLog = new FileOutputStream(fHeightLog);
+            fswHeightLog= new OutputStreamWriter(fsHeightLog);
+            String HeightHeader = "Time,Altitude";
+            writeHeightLog(HeightHeader);
+
+            Log.d("FILE", "Logs initiated");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeGPSLog(String mess)
+    {
+        try {
+            fswGPSLog.append(mess+"\n");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeHeightLog(String mess)
+    {
+        try {
+            fswHeightLog.append(mess+"\n");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void writeSensorLog(String mess)
+    {
+        try {
+            fswSensorsLog.append(mess+"\n");
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
+    }
+
+    private void closeLogs()
+    {
+        // write on SD card file data in the text box
+        try {
+            fswGPSLog.close();
+            fsGPSLog.close();
+            fswSensorsLog.close();
+            fsSensorsLog.close();
+        } catch (Exception e) {
+            Log.e("FILE", e.getMessage());
+        }
     }
 
     @Override
@@ -524,6 +644,7 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
     {
         if (deviceController != null)
         {
+            closeLogs();
             deviceController.stop();
             deviceController = null;
         }
@@ -581,6 +702,67 @@ public class PilotingActivity extends Activity implements DeviceControllerListen
                         landingBt.setEnabled(false);
                         break;
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onAltitudeChanged(final double altitude)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                altitudeLabel.setText(String.format("%f", altitude));
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeHeightLog(millis.toString()+","+altitude);
+            }
+        });
+    }
+
+    @Override
+    public void onAttitudeChanged(final float roll, final float pitch, final float yaw)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                rollLabel.setText(String.format("%f", roll));
+                pitchLabel.setText(String.format("%f", pitch));
+                yawLabel.setText(String.format("%f", yaw));
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeSensorLog(millis.toString()+","+roll+","+pitch+","+yaw);
+            }
+        });
+    }
+
+    @Override
+    public void onPositionChanged(final double latitude, final double longitude, final double altitude)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                latitudeLabel.setText(String.format("%f", latitude));
+                longitudeLabel.setText(String.format("%f", longitude));
+//                altitudeLabel.setText(String.format("%f", altitude));
+                time.setToNow();
+                Long millis = time.toMillis(false);
+                writeGPSLog(millis.toString()+","+latitude+","+longitude+","+altitude);
+            }
+        });
+    }
+
+    @Override
+    public void onGPSStatusChanged(final ARCOMMANDS_ARDRONE3_GPSSETTINGSSTATE_GPSUPDATESTATECHANGED_STATE_ENUM state)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                longitudeLabel.setText(String.format("%s", state));
             }
         });
     }
